@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=devicewidth, initial-scale=1.0">
+    <title>Калькулятор</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <div id="calculator">
+        <div class="top">
+            <span class="clear">C</span>
+            <div class="screen"></div>
+        </div>
+        <div class="keys">
+            <span>7</span>
+            <span>8</span>
+            <span>9</span>
+            <span class="operator">+</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span class="operator">-</span>
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span class="operator">÷</span>
+            <span>0</span>
+            <span>.</span>
+            <span class="eval">=</span>
+            <span class="operator">x</span>
+        </div>
+
+    </div>
+    <script>
+        let keyButtons = document.querySelectorAll('#calculator span');
+        let operatorsArray = ['+', '-', 'x', '÷'];
+        let decimalDigigAdded = false;
+        for (let i = 0; i < keyButtons.length; i++) {
+            keyButtons[i].onclick = function (e) {
+                let input = document.querySelector('.screen');
+                let inputValue = input.innerHTML;
+                let buttonValue = this.innerHTML;
+                let total = 0.0;
+                if (buttonValue == 'C') {
+                    input.innerHTML = '';
+                    decimalDigigAdded = false;
+                } else if (buttonValue == '=') {
+                    let equation = inputValue;
+                    let lastChar = equation[equation.length -
+                        1];
+                    equation = equation.replace(/x/g,
+                        '*').replace(/÷/g, '/');
+                    if (operatorsArray.indexOf(lastChar) > -1
+                        || lastChar == '.')
+                        equation = equation.replace(/.$/, '');
+                    if (equation) {
+                        total = eval(equation);
+                        if (total.toString().indexOf('.') != -1)
+                            total =
+                                total.toFixed(2);
+                        input.innerHTML = total;
+                    }
+                    decimalDigigAdded = false;
+                } else if (operatorsArray.indexOf(buttonValue) > -1) {
+                    let lastChar = inputValue[inputValue.length - 1];
+                    if (inputValue != '' && operatorsArray.indexOf(lastChar) == -1)
+                        input.innerHTML += buttonValue;
+                    else if (inputValue == '' && buttonValue
+                        == '-')
+                        input.innerHTML += buttonValue;
+
+                    if (operatorsArray.indexOf(lastChar) > -1
+                        && inputValue.length > 1)
+                        input.innerHTML = inputValue.replace(/.$/, buttonValue);
+                    decimalDigigAdded = false;
+                } else if (buttonValue == '.') {
+                    if (!decimalDigigAdded) {
+                        input.innerHTML += buttonValue;
+                        decimalDigigAdded = true;
+                    }
+                } else { input.innerHTML += buttonValue; }
+                e.preventDefault();
+            }
+        }
+    </script>
+</body>
+
+</html>
